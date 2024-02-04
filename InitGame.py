@@ -20,7 +20,11 @@ class Board:
     def render(self, screen):
         for i in range(self.width):
             for j in range(self.height):
-                pygame.draw.rect(screen, 'white', (
+                # Если клетка выбрана, то она закрашивается полностью
+                color = 'white'
+                if self.board[j][i] == 1:
+                    color = 'blue'
+                pygame.draw.rect(screen, color, (
                     (self.left + self.cell_size * i,
                      self.top + self.cell_size * j),
                     (self.cell_size,
@@ -47,9 +51,22 @@ class Board:
 
         return tuple(cell)
 
+    def on_click(self, cell_coords):
+        i, j = cell_coords
+        if self.board[i][j] == 0:
+            self.board[i][j] = 1
+        else:
+            self.board[i][j] = 0
+
+    def get_click(self, mouse_pos):
+        cell = self.get_cell(mouse_pos)
+        if cell:
+            self.on_click(cell)
+
+
 
 pygame.init()
-size = width, height = 1000, 1000
+size = width, height = 500, 500
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption('Игрулька')
@@ -65,8 +82,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # board.get_click(event.pos)
             active_cell = board.get_cell(event.pos)
-
+            print(active_cell)
 
     # Отрисовка
     # Очищаем экран
