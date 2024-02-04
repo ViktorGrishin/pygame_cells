@@ -28,28 +28,28 @@ class Board:
 
     def get_cell(self, mouse_pos):
         # Проверка наличия мыши в пределах поля
-        if (mouse_pos[0] < self.left or mouse_pos[0] > self.left + width * self.cell_size or
-                mouse_pos[1] < self.top or mouse_pos[1] > self.top + height * self.cell_size):
+        if (mouse_pos[0] < self.left or mouse_pos[0] > (self.left + self.width * self.cell_size) or
+                mouse_pos[1] < self.top or mouse_pos[1] > (self.top + self.height * self.cell_size)):
             return None
 
         # Находим столбец
         cell = [0, 0]
-        for i in range(width):
-            if mouse_pos[0] < self.left + self.cell_size * i:
-                cell[0] = i
+        for i in range(self.width):
+            if mouse_pos[0] < self.left + self.cell_size * (i + 1):
+                cell[1] = i
                 break
 
         # Находим строку
-        for i in range(width):
-            if mouse_pos[1] < self.top + self.cell_size * i:
-                cell[1] = i
+        for i in range(self.height):
+            if mouse_pos[1] < self.top + self.cell_size * (i + 1):
+                cell[0] = i
                 break
 
         return tuple(cell)
 
 
 pygame.init()
-size = width, height = 500, 500
+size = width, height = 1000, 1000
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption('Игрулька')
@@ -64,6 +64,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            active_cell = board.get_cell(event.pos)
+
 
     # Отрисовка
     # Очищаем экран
