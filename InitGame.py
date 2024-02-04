@@ -20,15 +20,18 @@ class Board:
     def render(self, screen):
         for i in range(self.width):
             for j in range(self.height):
-                # Если клетка выбрана, то она закрашивается полностью
-                color = 'white'
-                if self.board[j][i] == 1:
-                    color = 'blue'
-                pygame.draw.rect(screen, color, (
+                pygame.draw.rect(screen, 'white', (
                     (self.left + self.cell_size * i,
                      self.top + self.cell_size * j),
                     (self.cell_size,
                      self.cell_size)), width=1)
+                # Если клетка выбрана, то она закрашивается полностью
+                if self.board[j][i] == 1:
+                    pygame.draw.rect(screen, 'white', (
+                        (self.left + self.cell_size * i,
+                         self.top + self.cell_size * j),
+                        (self.cell_size,
+                         self.cell_size)), width=0)
 
     def get_cell(self, mouse_pos):
         # Проверка наличия мыши в пределах поля
@@ -53,10 +56,17 @@ class Board:
 
     def on_click(self, cell_coords):
         i, j = cell_coords
-        if self.board[i][j] == 0:
-            self.board[i][j] = 1
-        else:
-            self.board[i][j] = 0
+        for i in range(self.height):
+            if self.board[i][j] == 0:
+                self.board[i][j] = 1
+            else:
+                self.board[i][j] = 0
+        i, j = cell_coords
+        for j in range(self.width):
+            if self.board[i][j] == 0:
+                self.board[i][j] = 1
+            else:
+                self.board[i][j] = 0
 
     def get_click(self, mouse_pos):
         cell = self.get_cell(mouse_pos)
@@ -82,9 +92,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            # board.get_click(event.pos)
-            active_cell = board.get_cell(event.pos)
-            print(active_cell)
+            board.get_click(event.pos)
 
     # Отрисовка
     # Очищаем экран
